@@ -311,6 +311,14 @@ main {
   color: var(--enemy);
 }
 
+.score-p1__points,
+.score-p2__points {
+  text-shadow: -0.06em 0 0.08em var(--dark), 0.06em 0 0.08em var(--dark),
+    0 0.06em 0.08em var(--dark), 0 -0.06em 0.08em var(--dark),
+    -0.06em 0.06em 0.08em var(--dark), 0.06em 0.06em 0.08em var(--dark),
+    -0.06em -0.06em 0.08em var(--dark), 0.06em -0.06em 0.08em var(--dark);
+}
+
 .board {
   display: grid;
   position: relative;
@@ -457,5 +465,10 @@ main {
 
   .player-info__diff-ai {
     display: none;
+  }
+
+  .score-p1__points,
+  .score-p2__points {
+    text-shadow: inherit;
   }
 }
