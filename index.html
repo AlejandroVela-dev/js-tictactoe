@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Tic Tac Toe</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <img src="svg/tictactoe-logo.svg" alt="TicTacToe Logo" />
+      </header>
+      <main>
+        <div class="game game--menu">
+          <div
+            class="pvp-mode card animate-bob navigation"
+            data-destination="game--pvp"
+          >
+            <div class="img-holder">
+              <img src="svg/player.svg" alt="Player 1" />
+            </div>
+
+            <span>Vs</span>
+
+            <div class="img-holder">
+              <img src="svg/player-alt.svg" alt="Player 2" />
+            </div>
+          </div>
+
+          <div
+            class="pve-mode card animate-bob navigation"
+            data-destination="game--pve"
+          >
+            <div class="img-holder">
+              <img src="svg/player.svg" alt="Player 1" />
+            </div>
+            <span>Vs</span>
+            <div class="img-holder">
+              <img src="svg/robot.svg" alt="Robot" />
+            </div>
+          </div>
+        </div>
+
+        <div class="game game--pvp">
+          <div class="card">
+            <div class="prematch-info">
+              <div class="prematch-player">
+                <div class="img-holder">
+                  <img src="svg/player.svg" alt="Player 1" />
+                </div>
+                <div class="img-holder player-symbol">
+                  <img src="svg/cross.svg" alt="Cross" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Player 1"
+                  name="Player 1"
+                  id="player-1"
+                  maxlength="8"
+                  class="text-stroke animate-bob-auto"
+                />
+              </div>
+
+              <span>VS</span>
+
+              <div class="prematch-player">
+                <div class="img-holder">
+                  <img src="svg/player-alt.svg" alt="Player 1" />
+                </div>
+                <div class="img-holder player-symbol">
+                  <img src="svg/circle-blue.svg" alt="Circle" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Player 2"
+                  name="Player 2"
+                  id="player-2"
+                  maxlength="8"
+                  class="text-stroke animate-bob-auto"
+                />
+              </div>
+
+              <div
+                class="pvp-fight-btn btn-fight navigation"
+                data-destination="game--board"
+              >
+                Fight!
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="controls__back animate-scale navigation"
+            data-destination="game--menu"
+          >
+            <div class="img-holder">
+              <img src="svg/arrow-back.svg" alt="Back to menu" />
+            </div>
+            <span class="text-stroke">Back</span>
+          </div>
+        </div>
+
+        <div class="game game--pve">
+          <div class="card">
+            <div class="prematch-info">
+              <div class="prematch-player">
+                <div class="img-holder">
+                  <img src="svg/player.svg" alt="Player 1" />
+                </div>
+                <div class="img-holder player-symbol">
+                  <img src="svg/cross.svg" alt="Cross" />
+                </div>
+              </div>
+
+              <span>VS</span>
+
+              <div class="prematch-player">
+                <div class="img-holder">
+                  <img src="svg/robot.svg" alt="Robot" />
+                </div>
+                <div class="img-holder player-symbol">
+                  <img src="svg/circle-red.svg" alt="Circle" />
+                </div>
+              </div>
+
+              <div class="difficulty-selector text-stroke">
+                <div class="diff-ai easy animate-bob animate-grayscale">
+                  easy
+                </div>
+                <div class="diff-ai mid animate-bob animate-grayscale">mid</div>
+                <div class="diff-ai hard animate-bob animate-grayscale">
+                  hard
+                </div>
+              </div>
+
+              <div
+                class="pve-fight-btn btn-fight navigation"
+                data-destination="game--board"
+              >
+                Fight!
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="controls__back animate-scale navigation"
+            data-destination="game--menu"
+          >
+            <div class="img-holder">
+              <img src="svg/arrow-back.svg" alt="Back to menu" />
+            </div>
+            <span class="text-stroke">Back</span>
+          </div>
+        </div>
+
+        <div class="game game--board">
+          <div class="card score score-p1">
+            <div class="img-holder">
+              <img src="svg/player.svg" alt="Player 1" />
+            </div>
+            <span class="score-p1--points text-stroke">0</span>
+          </div>
+
+          <div class="card score score-p2">
+            <div class="img-holder">
+              <img
+                src="svg/player-alt.svg"
+                alt="Player 2"
+                class="enemy-picture"
+              />
+            </div>
+            <span class="score-p2--points text-stroke">0</span>
+          </div>
+
+          <div class="score-desktop score-p1">
+            <div class="card player-info">
+              <div class="img-holder">
+                <img src="svg/player.svg" alt="Player 1" />
+              </div>
+              <div class="img-holder player-symbol">
+                <img src="svg/cross.svg" alt="Cross" />
+              </div>
+              <span class="player-info__name-1 text-stroke">Human</span>
+            </div>
+
+            <div class="score-desktop__points text-stroke">
+              Wins: <span class="score-p1__points">0</span>
+            </div>
+          </div>
+
+          <div class="card board result--overlay">
+            <div class="board__box box-0" data-index="0">
+              <img src="" />
+            </div>
+            <div class="board__box box-1" data-index="1">
+              <img src="" />
+            </div>
+            <div class="board__box box-2" data-index="2">
+              <img src="" />
+            </div>
+            <div class="board__box box-3" data-index="3">
+              <img />
+            </div>
+            <div class="board__box box-4" data-index="4">
+              <img src="" />
+            </div>
+            <div class="board__box box-5" data-index="5">
+              <img />
+            </div>
+            <div class="board__box box-6" data-index="6">
+              <img src="" />
+            </div>
+            <div class="board__box box-7" data-index="7">
+              <img />
+            </div>
+            <div class="board__box box-8" data-index="8">
+              <img src="" />
+            </div>
+            <div class="match-result text-stroke">
+              <span class="result--winner">Player 1</span>
+              Wins!
+            </div>
+          </div>
+
+          <div class="score-desktop score-p2">
+            <div class="card player-info">
+              <div class="img-holder">
+                <img
+                  src="svg/player-alt.svg"
+                  alt="Enemy Picture"
+                  class="enemy-picture"
+                />
+              </div>
+              <div class="img-holder player-symbol">
+                <img
+                  class="enemy-symbol"
+                  src="svg/circle-blue.svg"
+                  alt="Enemy Symbol"
+                />
+              </div>
+              <span class="player-info__name-2 text-stroke"></span>
+              <div class="diff-ai player-info__diff-ai text-stroke"></div>
+            </div>
+
+            <div class="score-desktop__points text-stroke">
+              Wins: <span class="score-p2__points">0</span>
+            </div>
+          </div>
+
+          <div class="result--controls">
+            <div
+              class="controls__back animate-scale text-stroke navigation"
+              data-destination="game--menu"
+            >
+              <div class="img-holder">
+                <img src="svg/arrow-back.svg" alt="Back to menu" />
+              </div>
+              <span>Back</span>
+            </div>
+
+            <div class="controls__next-round animate-scale text-stroke">
+              <span>Next</span>
+              <span>Round!</span>
+            </div>
+
+            <div class="controls__reset-score animate-scale text-stroke">
+              <span>Reset</span>
+              <span>Score</span>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <a
+          href="https://github.com/alejandrovela-dev"
+          title="Alejandro Vela - GitHub"
+          rel="noopener noreferrer"
+          target="_blank"
+          class="github-icon"
+          ><img src="svg/github.svg" alt="Alejandro Vela - GitHub"
+        /></a>
+      </footer>
+    </div>
+    <script defer src="scripts.js"></script>
+  </body>
+</html>
