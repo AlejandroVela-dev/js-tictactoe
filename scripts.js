@@ -1,12 +1,9 @@
 'use strict';
 
 /* TO DO:
-  - Refactor gameBoard methods (clearer logic)
-  - Game result (Everything)
-    -- Hide reset / next round when game unfinished
-    -- Display divs and clean current game
-  - Next Round (Everything)
-  - Reset score (Everything)
+  - Next Round -> Methods (reset gameBoard round, reset displayController board)
+  - Reset Score -> Methods (reset PlayerOne/Two scores, refresh displayController scores)
+  - displayController -> Current turn animation (get turn from gameBoard)
 */
 
 // PLAYERS INITIALIZATION
@@ -33,15 +30,23 @@ const displayController = (() => {
   const boardPlayerTwoName = document.querySelector('.player-info__name-2');
   const boardDifficultyInfo = document.querySelector('.player-info__diff-ai');
   const boardBoxes = document.querySelectorAll('.board__box');
+  const boardRoundResult = document.querySelector('.match-result');
+  const boardRoundResultWinner = document.querySelector('.result--winner');
+  const boardNextRoundBtn = document.querySelector('.controls__next-round');
+  const boardResetScoreBtn = document.querySelector('.controls__reset-score');
+  const boardPlayerOneScore = document.querySelectorAll('.score-p1__points');
+  const boardPlayerTwoScore = document.querySelectorAll('.score-p2__points');
 
   // PLAYERS ATTRIBUTES
+  const cssRoot = getComputedStyle(document.documentElement);
   const playerOneSymbol = 'svg/cross.svg';
+  const playerOneColor = cssRoot.getPropertyValue('--player1');
   const playerTwoPicture = 'svg/player-alt.svg';
   const playerTwoSymbol = 'svg/circle-blue.svg';
-  const playerTwoColor = 'hsl(202, 100%, 70%)';
+  const playerTwoColor = cssRoot.getPropertyValue('--player2');
   const robotPicture = 'svg/robot.svg';
   const robotSymbol = 'svg/circle-red.svg';
-  const robotColor = 'hsl(0, 100%, 58%)';
+  const robotColor = cssRoot.getPropertyValue('--robot');
 
   // METHODS - UI ELEMENTS
   const setDifficultyBtn = (button) => {
@@ -92,10 +97,12 @@ const displayController = (() => {
     }
   };
 
-  const resetInputs = () => {
+  const resetGame = () => {
     playerOneInput.value = '';
     playerTwoInput.value = '';
     boardDifficultyInfo.classList.remove(aiDifficulty);
+    hideRoundResult();
+    resetBoard();
   };
 
   // METHODS - GAME SCREEN MANAGEMENT
@@ -123,6 +130,7 @@ const displayController = (() => {
 
       case 'game--board':
         createPlayers();
+        refreshScores();
         fillBoardCards();
         break;
 
@@ -194,9 +202,56 @@ const displayController = (() => {
     });
   });
 
+  const resetBoard = () => {
+    boardBoxes.forEach((box) => (box.firstElementChild.src = ''));
+  };
+
+  const showRoundResult = (winner) => {
+    let winnerName;
+    switch (winner) {
+      case 'x':
+        winnerName = playerOne.getName();
+        boardRoundResultWinner.style.color = playerOneColor;
+        boardRoundResultWinner.innerText = winnerName;
+        refreshScores();
+        break;
+
+      case 'o':
+        winnerName = playerTwo.getName();
+        boardRoundResultWinner.innerText = winnerName;
+        boardRoundResultWinner.style.color = enemyColor[0].style.color;
+        refreshScores();
+        break;
+
+      default:
+        boardRoundResultWinner.innerText = '';
+        boardRoundResult.innerText = `It's a tie!`;
+        break;
+    }
+    boardRoundResult.style.display = 'flex';
+    boardNextRoundBtn.style.display = 'flex';
+    boardResetScoreBtn.style.display = 'flex';
+  };
+
+  const hideRoundResult = () => {
+    boardRoundResult.style.display = 'none';
+    boardNextRoundBtn.style.display = 'none';
+    boardResetScoreBtn.style.display = 'none';
+  };
+
+  const refreshScores = () => {
+    boardPlayerOneScore.forEach(
+      (score) => (score.innerText = playerOne.getScore())
+    );
+    boardPlayerTwoScore.forEach(
+      (score) => (score.innerText = playerTwo.getScore())
+    );
+  };
+
   return {
     fillBoardBox,
-    resetInputs,
+    showRoundResult,
+    resetGame,
   };
 })();
 
@@ -227,7 +282,7 @@ const gameBoard = (() => {
   let boardArray = [];
   let moveCount = 0;
   let playerOneTurn = true; // Allows turn-order management
-  const winCombinations = [
+  const winningPatterns = [
     [0, 3, 6],
     [1, 4, 7],
     [2, 5, 8],
@@ -248,7 +303,7 @@ const gameBoard = (() => {
     playerOneTurn = true;
     playerOne = undefined;
     playerTwo = undefined;
-    displayController.resetInputs();
+    displayController.resetGame();
   };
 
   const getCurrentSymbol = () => {
@@ -259,34 +314,39 @@ const gameBoard = (() => {
     boardArray[index] = getCurrentSymbol();
   };
 
+  const isMoveLegal = (index) => {
+    return boardArray[index] === undefined;
+  };
+
   const makeMove = (index) => {
-    if (boardArray[index] === undefined) {
+    if (isMoveLegal(index)) {
       fillArray(index);
       displayController.fillBoardBox(index, playerOneTurn);
       moveCount++;
+      // Only check results after 4th movement
       if (moveCount >= 5) {
-        checkResult(getCurrentSymbol());
+        checkRoundResult(getCurrentSymbol());
       }
       changeTurn();
     } else return;
   };
 
-  const checkResult = (currentSymbol) => {
-    const win = winCombinations.some((winCombination) => {
-      return winCombination.every(
-        (index) => boardArray[index] === currentSymbol
+  const checkRoundResult = (currentSymbol) => {
+    const win = winningPatterns.some((winningPattern) => {
+      // Check and return true when first pattern is filled with the current symbol
+      return winningPattern.every(
+        (patternIndex) => boardArray[patternIndex] === currentSymbol
       );
     });
-    if (win) winGame();
-    else if (moveCount === 9) tieGame();
+
+    if (win) roundResult(currentSymbol);
+    else if (moveCount === 9) roundResult();
   };
 
-  const winGame = () => {
-    console.log('Ez win');
-  };
-
-  const tieGame = () => {
-    console.log('Tie');
+  const roundResult = (winner) => {
+    if (winner === 'x') playerOne.winRound();
+    if (winner === 'o') playerTwo.winRound();
+    displayController.showRoundResult(winner);
   };
 
   return {
