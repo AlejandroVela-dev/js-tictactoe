@@ -1,9 +1,16 @@
 'use strict';
 
 /* TO DO:
-  - Next Round -> Methods (reset gameBoard round, reset displayController board)
   - Reset Score -> Methods (reset PlayerOne/Two scores, refresh displayController scores)
-  - *Optional -> Add 'first turn' switch (it should read currentTurn and execute gameBoard.changeTurn())
+  - 'First turn' switch (it should read currentTurn and execute gameBoard.changeTurn())
+*/
+
+/* LOW PRIORITY TO DO (Can be implemented after PvP)
+  - AI Research:
+    -- Minimax algorithm
+    -- Optimal % of perfect move for each difficulty level
+    -- Optimal UI/UX delay response when UI making move
+    -- Add AI moves logic and trigger
 */
 
 // PLAYERS INITIALIZATION

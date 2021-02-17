@@ -30,8 +30,9 @@
 ## Features
 
 - Play against your friend (2-Player mode)
-- Fight the Robot (3 difficulty levels AI)
 - Responsive design
+
+> In development: **Fight the Robot (3 difficulty levels AI)**
 
 ## Design
 
