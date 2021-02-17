@@ -1,7 +1,6 @@
 'use strict';
 
 /* TO DO:
-  - Reset Score -> Methods (reset PlayerOne/Two scores, refresh displayController scores)
   - 'First turn' switch (it should read currentTurn and execute gameBoard.changeTurn())
 */
 
@@ -11,6 +10,9 @@
     -- Optimal % of perfect move for each difficulty level
     -- Optimal UI/UX delay response when UI making move
     -- Add AI moves logic and trigger
+
+  - Refactor && Re-arrange code
+  - Comment not-straightforward code blocks
 */
 
 // PLAYERS INITIALIZATION
@@ -266,6 +268,10 @@ const displayController = (() => {
 
   // METHODS - GAME UTILITIES
   boardNextRoundBtn.addEventListener('click', () => gameBoard.resetTurn());
+  boardResetScoreBtn.addEventListener('click', () => {
+    playerOne.resetScore();
+    playerTwo.resetScore();
+  });
 
   const refreshScores = () => {
     boardPlayerOneScore.forEach(
@@ -293,6 +299,7 @@ const displayController = (() => {
     boardDifficultyInfo.classList.remove(aiDifficulty);
   };
 
+  // PUBLIC
   return {
     animateCurrentTurn,
     fillBoardBox,
@@ -320,6 +327,7 @@ const Player = (name, symbol, difficulty) => {
     displayController.refreshScores();
   };
 
+  // PUBLIC
   return {
     getName,
     getSymbol,
@@ -421,6 +429,7 @@ const gameBoard = (() => {
     displayController.showRoundResult(winner);
   };
 
+  // PUBLIC
   return {
     changeTurn,
     makeMove,
