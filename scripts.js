@@ -15,19 +15,30 @@ const displayController = (() => {
   let gameMode;
   let aiDifficulty = 'easy';
 
-  // SCREEN NAVIGATION ELEMENTS
+  // UI - PLAYERS ATTRIBUTES
+  const cssRoot = getComputedStyle(document.documentElement);
+  const playerOneColor = cssRoot.getPropertyValue('--player1');
+  const playerOneSymbol = 'svg/cross.svg';
+  const playerTwoPicture = 'svg/player-alt.svg';
+  const playerTwoColor = cssRoot.getPropertyValue('--player2');
+  const playerTwoSymbol = 'svg/circle-blue.svg';
+  const robotPicture = 'svg/robot.svg';
+  const robotColor = cssRoot.getPropertyValue('--robot');
+  const robotSymbol = 'svg/circle-red.svg';
+
+  // UI ELEMENTS - SCREEN NAVIGATION
   const gameScreens = document.querySelectorAll('.game');
   const navigationBtns = document.querySelectorAll('.navigation');
 
-  // UI ELEMENTS
+  // UI ELEMENTS - GAME SELECT
   const playerOneInput = document.querySelector('#player-1');
   const playerTwoInput = document.querySelector('#player-2');
-
   const enemyPicture = document.querySelectorAll('.enemy-picture');
   const enemySymbol = document.querySelector('.enemy-symbol');
   const enemyColor = document.querySelectorAll('.score-p2');
   const enemyAIDifficultyBtn = document.querySelectorAll('.diff-ai');
 
+  // UI ELEMENTS - GAME BOARD
   const boardPlayerCards = document.querySelectorAll('.player-card');
   const boardPlayerOneCard = document.querySelectorAll('.card-p1');
   const boardPlayerOneName = document.querySelector('.player-info__name-1');
@@ -36,87 +47,26 @@ const displayController = (() => {
   const boardPlayerTwoName = document.querySelector('.player-info__name-2');
   const boardPlayerTwoScore = document.querySelectorAll('.score-p2__points');
   const boardDifficultyInfo = document.querySelector('.player-info__diff-ai');
-
   const boardBoxes = document.querySelectorAll('.board__box');
   const boardRoundResult = document.querySelector('.match-result');
   const boardRoundResultWinner = document.querySelector('.result--winner');
+  const boardRoundResultText = document.querySelector('.result--text');
   const boardNextRoundBtn = document.querySelector('.controls__next-round');
   const boardResetScoreBtn = document.querySelector('.controls__reset-score');
 
-  // PLAYERS ATTRIBUTES
-  const cssRoot = getComputedStyle(document.documentElement);
-  const playerOneSymbol = 'svg/cross.svg';
-  const playerOneColor = cssRoot.getPropertyValue('--player1');
-  const playerTwoPicture = 'svg/player-alt.svg';
-  const playerTwoSymbol = 'svg/circle-blue.svg';
-  const playerTwoColor = cssRoot.getPropertyValue('--player2');
-  const robotPicture = 'svg/robot.svg';
-  const robotSymbol = 'svg/circle-red.svg';
-  const robotColor = cssRoot.getPropertyValue('--robot');
-
-  // METHODS - UI ELEMENTS
-  const setDifficultyBtn = (button) => {
-    button.classList.add('current-difficulty');
-    button.classList.remove('animate-bob', 'animate-grayscale');
-  };
-
-  const unsetDifficultyBtn = (button) => {
-    button.classList.add('animate-bob', 'animate-grayscale');
-    button.classList.remove('current-difficulty');
-  };
-
-  enemyAIDifficultyBtn.forEach((x) =>
-    x.addEventListener('click', () => {
-      const activeBtn = document.querySelector('.current-difficulty');
-      if (activeBtn) {
-        unsetDifficultyBtn(activeBtn);
-      }
-      setDifficultyBtn(x);
-      aiDifficulty = x.textContent.trim();
-    })
-  );
-
-  const fillEnemyAttributes = (picture, color, symbol) => {
-    enemyPicture.forEach((x) => (x.src = picture));
-    enemyColor.forEach((x) => (x.style.color = color));
-    enemySymbol.src = symbol;
-  };
-
-  const fillBoardCards = () => {
-    switch (gameMode) {
-      case 'pvp':
-        boardPlayerOneName.textContent = playerOne.getName();
-        boardPlayerTwoName.textContent = playerTwo.getName();
-        boardDifficultyInfo.style.display = 'none';
-        break;
-
-      case 'pve':
-        boardPlayerOneName.textContent = playerOne.getName();
-        boardPlayerTwoName.textContent = '';
-        boardDifficultyInfo.textContent = aiDifficulty;
-        boardDifficultyInfo.classList.add(aiDifficulty);
-        boardDifficultyInfo.style.display = 'flex';
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const resetGame = () => {
-    playerOneInput.value = '';
-    playerTwoInput.value = '';
-    boardDifficultyInfo.classList.remove(aiDifficulty);
-    hideRoundResult();
-    resetBoard();
-  };
-
-  // METHODS - GAME SCREEN MANAGEMENT
+  // METHODS - SCREEN NAVIGATION
   const navigageTo = (screen) => {
     prepareScreen(screen);
     hideAllScreens();
     showScreen(screen);
   };
+
+  navigationBtns.forEach((x) => {
+    x.addEventListener('click', () => {
+      const screen = x.dataset.destination;
+      navigageTo(screen);
+    });
+  });
 
   const prepareScreen = (screen) => {
     switch (screen) {
@@ -155,14 +105,35 @@ const displayController = (() => {
     destinationScreen.style.display = 'grid';
   };
 
-  navigationBtns.forEach((x) => {
-    x.addEventListener('click', () => {
-      const screen = x.dataset.destination;
-      navigageTo(screen);
-    });
-  });
+  // METHODS - GAME SELECT
+  const fillEnemyAttributes = (picture, color, symbol) => {
+    enemyPicture.forEach((x) => (x.src = picture));
+    enemyColor.forEach((x) => (x.style.color = color));
+    enemySymbol.src = symbol;
+  };
 
-  // METHODS - GAME UTILITIES
+  const setDifficultyBtn = (button) => {
+    button.classList.add('current-difficulty');
+    button.classList.remove('animate-bob', 'animate-grayscale');
+  };
+
+  const unsetDifficultyBtn = (button) => {
+    button.classList.add('animate-bob', 'animate-grayscale');
+    button.classList.remove('current-difficulty');
+  };
+
+  enemyAIDifficultyBtn.forEach((x) =>
+    x.addEventListener('click', () => {
+      const activeBtn = document.querySelector('.current-difficulty');
+      if (activeBtn) {
+        unsetDifficultyBtn(activeBtn);
+      }
+      setDifficultyBtn(x);
+      aiDifficulty = x.textContent.trim();
+    })
+  );
+
+  // METHODS - PLAYERS FACTORY EXECUTION
   const createPlayers = () => {
     switch (gameMode) {
       case 'pvp':
@@ -194,7 +165,28 @@ const displayController = (() => {
     playerTwo = Player('Robot', 'o', aiDifficulty);
   };
 
-  // GAME BOARD UI
+  // METHODS - GAME BOARD
+  const fillBoardCards = () => {
+    switch (gameMode) {
+      case 'pvp':
+        boardPlayerOneName.textContent = playerOne.getName();
+        boardPlayerTwoName.textContent = playerTwo.getName();
+        boardDifficultyInfo.style.display = 'none';
+        break;
+
+      case 'pve':
+        boardPlayerOneName.textContent = playerOne.getName();
+        boardPlayerTwoName.textContent = '';
+        boardDifficultyInfo.textContent = aiDifficulty;
+        boardDifficultyInfo.classList.add(aiDifficulty);
+        boardDifficultyInfo.style.display = 'flex';
+        break;
+
+      default:
+        break;
+    }
+  };
+
   const fillBoardBox = (index, playerOneTurn) => {
     const box = document.querySelector(`[data-index='${index}']`)
       .firstElementChild;
@@ -209,47 +201,37 @@ const displayController = (() => {
     });
   });
 
-  const resetBoard = () => {
-    boardBoxes.forEach((box) => (box.firstElementChild.src = ''));
-  };
-
   const showRoundResult = (winner) => {
     switch (winner) {
       case 'x':
-        boardRoundResultWinner.innerText = playerOne.getName();
-        boardRoundResultWinner.style.color = playerOneColor;
-        refreshScores();
+        setRoundResultMsg(playerOne.getName(), 'Wins!', playerOneColor);
         break;
 
       case 'o':
-        boardRoundResultWinner.innerText = playerTwo.getName();
-        boardRoundResultWinner.style.color = enemyColor[0].style.color;
-        refreshScores();
+        setRoundResultMsg(
+          playerTwo.getName(),
+          'Wins!',
+          enemyColor[0].style.color
+        );
         break;
 
       default:
-        boardRoundResultWinner.innerText = '';
-        boardRoundResult.innerText = `It's a tie!`;
+        setRoundResultMsg('', `It's a tie!`);
         break;
     }
-    boardRoundResult.style.display = 'flex';
-    boardNextRoundBtn.style.display = 'flex';
-    boardResetScoreBtn.style.display = 'flex';
+    toogleRoundResult('flex');
   };
 
-  const hideRoundResult = () => {
-    boardRoundResult.style.display = 'none';
-    boardNextRoundBtn.style.display = 'none';
-    boardResetScoreBtn.style.display = 'none';
+  const setRoundResultMsg = (winner, text, color = '') => {
+    boardRoundResultWinner.innerText = winner;
+    boardRoundResultText.innerText = text;
+    boardRoundResultWinner.style.color = color;
   };
 
-  const refreshScores = () => {
-    boardPlayerOneScore.forEach(
-      (score) => (score.innerText = playerOne.getScore())
-    );
-    boardPlayerTwoScore.forEach(
-      (score) => (score.innerText = playerTwo.getScore())
-    );
+  const toogleRoundResult = (displayValue) => {
+    boardRoundResult.style.display = displayValue;
+    boardNextRoundBtn.style.display = displayValue;
+    boardResetScoreBtn.style.display = displayValue;
   };
 
   const animateCurrentTurn = (currentSymbol) => {
@@ -275,10 +257,41 @@ const displayController = (() => {
     }
   };
 
+  // METHODS - GAME UTILITIES
+  boardNextRoundBtn.addEventListener('click', () => gameBoard.resetTurn());
+
+  const refreshScores = () => {
+    boardPlayerOneScore.forEach(
+      (score) => (score.innerText = playerOne.getScore())
+    );
+    boardPlayerTwoScore.forEach(
+      (score) => (score.innerText = playerTwo.getScore())
+    );
+  };
+
+  const resetBoard = () => {
+    boardBoxes.forEach((box) => (box.firstElementChild.src = ''));
+    toogleRoundResult('none');
+  };
+
+  const resetTurn = () => {
+    resetBoard();
+    animateCurrentTurn(gameBoard.getCurrentTurnSymbol());
+  };
+
+  const resetGame = () => {
+    resetBoard();
+    playerOneInput.value = '';
+    playerTwoInput.value = '';
+    boardDifficultyInfo.classList.remove(aiDifficulty);
+  };
+
   return {
     animateCurrentTurn,
     fillBoardBox,
     showRoundResult,
+    refreshScores,
+    resetTurn,
     resetGame,
   };
 })();
@@ -291,8 +304,14 @@ const Player = (name, symbol, difficulty) => {
   const setDifficulty = (x) => (difficulty = x);
   const getDifficulty = () => difficulty;
   const getScore = () => score;
-  const resetScore = () => (score = 0);
-  const winRound = () => (score += 1);
+  const resetScore = () => {
+    score = 0;
+    displayController.refreshScores();
+  };
+  const winRound = () => {
+    score += 1;
+    displayController.refreshScores();
+  };
 
   return {
     getName,
@@ -334,23 +353,30 @@ const gameBoard = (() => {
     displayController.resetGame();
   };
 
+  const resetTurn = () => {
+    boardArray = [];
+    moveCount = 0;
+    playerOneTurn = true;
+    displayController.resetTurn();
+  };
+
   const getCurrentTurnSymbol = () => {
     return playerOneTurn ? 'x' : 'o';
   };
 
-  const fillArray = (index) => {
-    boardArray[index] = getCurrentTurnSymbol();
+  const fillBoardArray = (boxIndex) => {
+    boardArray[boxIndex] = getCurrentTurnSymbol();
   };
 
-  const isMoveLegal = (index) => {
-    return boardArray[index] === undefined;
+  const isMoveLegal = (boxIndex) => {
+    return boardArray[boxIndex] === undefined;
   };
 
-  const makeMove = (index) => {
+  const makeMove = (boxIndex) => {
     let roundEnd = false; // Holds roundResult answer to enable turns change
-    if (isMoveLegal(index)) {
-      fillArray(index);
-      displayController.fillBoardBox(index, playerOneTurn);
+    if (isMoveLegal(boxIndex)) {
+      fillBoardArray(boxIndex);
+      displayController.fillBoardBox(boxIndex, playerOneTurn);
       moveCount++;
       // Only check results after 4th movement
       if (moveCount >= 5) {
@@ -390,8 +416,9 @@ const gameBoard = (() => {
 
   return {
     changeTurn,
-    getCurrentTurnSymbol,
-    resetGame,
     makeMove,
+    getCurrentTurnSymbol,
+    resetTurn,
+    resetGame,
   };
 })();
