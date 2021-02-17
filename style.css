@@ -34,11 +34,9 @@
     -0.12em -0.12em 0.08em var(--dark), 0.12em -0.12em 0.08em var(--dark);
 }
 
+.animate-bob:hover,
+.animate-bob-turn,
 .animate-bob-auto:placeholder-shown {
-  animation: 0.75s ease-in-out infinite bob;
-}
-
-.animate-bob:hover {
   animation: 0.75s ease-in-out infinite bob;
 }
 

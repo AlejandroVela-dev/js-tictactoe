@@ -3,7 +3,7 @@
 /* TO DO:
   - Next Round -> Methods (reset gameBoard round, reset displayController board)
   - Reset Score -> Methods (reset PlayerOne/Two scores, refresh displayController scores)
-  - displayController -> Current turn animation (get turn from gameBoard)
+  - *Optional -> Add 'first turn' switch (it should read currentTurn and execute gameBoard.changeTurn())
 */
 
 // PLAYERS INITIALIZATION
@@ -22,20 +22,26 @@ const displayController = (() => {
   // UI ELEMENTS
   const playerOneInput = document.querySelector('#player-1');
   const playerTwoInput = document.querySelector('#player-2');
+
   const enemyPicture = document.querySelectorAll('.enemy-picture');
   const enemySymbol = document.querySelector('.enemy-symbol');
   const enemyColor = document.querySelectorAll('.score-p2');
   const enemyAIDifficultyBtn = document.querySelectorAll('.diff-ai');
+
+  const boardPlayerCards = document.querySelectorAll('.player-card');
+  const boardPlayerOneCard = document.querySelectorAll('.card-p1');
   const boardPlayerOneName = document.querySelector('.player-info__name-1');
+  const boardPlayerOneScore = document.querySelectorAll('.score-p1__points');
+  const boardPlayerTwoCard = document.querySelectorAll('.card-p2');
   const boardPlayerTwoName = document.querySelector('.player-info__name-2');
+  const boardPlayerTwoScore = document.querySelectorAll('.score-p2__points');
   const boardDifficultyInfo = document.querySelector('.player-info__diff-ai');
+
   const boardBoxes = document.querySelectorAll('.board__box');
   const boardRoundResult = document.querySelector('.match-result');
   const boardRoundResultWinner = document.querySelector('.result--winner');
   const boardNextRoundBtn = document.querySelector('.controls__next-round');
   const boardResetScoreBtn = document.querySelector('.controls__reset-score');
-  const boardPlayerOneScore = document.querySelectorAll('.score-p1__points');
-  const boardPlayerTwoScore = document.querySelectorAll('.score-p2__points');
 
   // PLAYERS ATTRIBUTES
   const cssRoot = getComputedStyle(document.documentElement);
@@ -131,6 +137,7 @@ const displayController = (() => {
       case 'game--board':
         createPlayers();
         refreshScores();
+        animateCurrentTurn(gameBoard.getCurrentTurnSymbol());
         fillBoardCards();
         break;
 
@@ -207,18 +214,15 @@ const displayController = (() => {
   };
 
   const showRoundResult = (winner) => {
-    let winnerName;
     switch (winner) {
       case 'x':
-        winnerName = playerOne.getName();
+        boardRoundResultWinner.innerText = playerOne.getName();
         boardRoundResultWinner.style.color = playerOneColor;
-        boardRoundResultWinner.innerText = winnerName;
         refreshScores();
         break;
 
       case 'o':
-        winnerName = playerTwo.getName();
-        boardRoundResultWinner.innerText = winnerName;
+        boardRoundResultWinner.innerText = playerTwo.getName();
         boardRoundResultWinner.style.color = enemyColor[0].style.color;
         refreshScores();
         break;
@@ -248,7 +252,31 @@ const displayController = (() => {
     );
   };
 
+  const animateCurrentTurn = (currentSymbol) => {
+    boardPlayerCards.forEach((card) =>
+      card.classList.remove('animate-bob-turn')
+    );
+
+    switch (currentSymbol) {
+      case 'x':
+        boardPlayerOneCard.forEach((card) =>
+          card.classList.add('animate-bob-turn')
+        );
+        break;
+
+      case 'o':
+        boardPlayerTwoCard.forEach((card) =>
+          card.classList.add('animate-bob-turn')
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return {
+    animateCurrentTurn,
     fillBoardBox,
     showRoundResult,
     resetGame,
@@ -306,12 +334,12 @@ const gameBoard = (() => {
     displayController.resetGame();
   };
 
-  const getCurrentSymbol = () => {
+  const getCurrentTurnSymbol = () => {
     return playerOneTurn ? 'x' : 'o';
   };
 
   const fillArray = (index) => {
-    boardArray[index] = getCurrentSymbol();
+    boardArray[index] = getCurrentTurnSymbol();
   };
 
   const isMoveLegal = (index) => {
@@ -319,15 +347,20 @@ const gameBoard = (() => {
   };
 
   const makeMove = (index) => {
+    let roundEnd = false; // Holds roundResult answer to enable turns change
     if (isMoveLegal(index)) {
       fillArray(index);
       displayController.fillBoardBox(index, playerOneTurn);
       moveCount++;
       // Only check results after 4th movement
       if (moveCount >= 5) {
-        checkRoundResult(getCurrentSymbol());
+        roundEnd = checkRoundResult(getCurrentTurnSymbol());
       }
-      changeTurn();
+      // If no win or tie, game continues, change turn
+      if (!roundEnd) {
+        changeTurn();
+        displayController.animateCurrentTurn(getCurrentTurnSymbol());
+      }
     } else return;
   };
 
@@ -339,8 +372,14 @@ const gameBoard = (() => {
       );
     });
 
-    if (win) roundResult(currentSymbol);
-    else if (moveCount === 9) roundResult();
+    if (win) {
+      roundResult(currentSymbol);
+      return true;
+    } else if (moveCount === 9) {
+      roundResult();
+      displayController.animateCurrentTurn(); // Disables turn animation when tie
+      return true;
+    }
   };
 
   const roundResult = (winner) => {
@@ -350,6 +389,8 @@ const gameBoard = (() => {
   };
 
   return {
+    changeTurn,
+    getCurrentTurnSymbol,
     resetGame,
     makeMove,
   };
