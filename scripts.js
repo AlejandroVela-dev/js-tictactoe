@@ -369,7 +369,6 @@ const gameBoard = (() => {
 
   const resetTurn = () => {
     boardArray.length = 0;
-    console.log('Hola');
     moveCount = 0;
     playerOneStarts = !playerOneStarts;
     playerOneTurn = playerOneStarts;
