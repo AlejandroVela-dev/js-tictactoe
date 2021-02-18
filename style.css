@@ -32,7 +32,6 @@
     0 0.12em 0.08em var(--dark), 0 -0.12em 0.08em var(--dark),
     -0.12em 0.12em 0.08em var(--dark), 0.12em 0.12em 0.08em var(--dark),
     -0.12em -0.12em 0.08em var(--dark), 0.12em -0.12em 0.08em var(--dark);
-  line-height: 1.5em;
 }
 
 .animate-bob:hover,

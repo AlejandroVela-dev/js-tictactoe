@@ -7,7 +7,16 @@
     -- Optimal UI/UX delay response when UI making move
 
   - Refactor && Re-arrange code
+  
   - Comment not-straightforward code blocks
+
+  ** NOT PRIORITY **
+  - Fix font-rendering on Android devices:
+    -- Luckiest Guy clipping line-height
+      --- Replace font (check with USB Firefox Debug)
+      --- If renders properly: re-adjust logo and shadows
+
+  - Update README GIFs
 */
 
 // PLAYERS INITIALIZATION
