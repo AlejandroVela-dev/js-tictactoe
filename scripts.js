@@ -1,11 +1,10 @@
 'use strict';
 
-/* TO DO (Can be implemented after PvP)
+/* TO DO
   - AI Research:
     -- Minimax algorithm
     -- Optimal % of perfect move for each difficulty level
     -- Optimal UI/UX delay response when UI making move
-    -- Add AI moves logic and trigger
 
   - Refactor && Re-arrange code
   - Comment not-straightforward code blocks
@@ -19,6 +18,7 @@ let playerTwo;
 const displayController = (() => {
   let gameMode;
   let aiDifficulty = 'easy';
+  const getGameMode = () => gameMode;
 
   // UI - PLAYERS ATTRIBUTES
   const cssRoot = getComputedStyle(document.documentElement);
@@ -297,6 +297,7 @@ const displayController = (() => {
 
   // PUBLIC
   return {
+    getGameMode,
     animateCurrentTurn,
     fillBoardBox,
     showRoundResult,
@@ -357,7 +358,7 @@ const gameBoard = (() => {
   };
 
   const resetGame = () => {
-    boardArray = [];
+    boardArray.length = 0;
     moveCount = 0;
     playerOneStarts = true;
     playerOneTurn = true;
@@ -367,11 +368,14 @@ const gameBoard = (() => {
   };
 
   const resetTurn = () => {
-    boardArray = [];
+    boardArray.length = 0;
+    console.log('Hola');
     moveCount = 0;
     playerOneStarts = !playerOneStarts;
     playerOneTurn = playerOneStarts;
     displayController.resetTurn();
+
+    checkAndExecuteRobotTurn();
   };
 
   const getCurrentTurnSymbol = () => {
@@ -400,8 +404,14 @@ const gameBoard = (() => {
       if (!roundEnd) {
         changeTurn();
         displayController.animateCurrentTurn(getCurrentTurnSymbol());
+        checkAndExecuteRobotTurn();
       }
     } else return;
+  };
+
+  const checkAndExecuteRobotTurn = () => {
+    if (!playerOneTurn && displayController.getGameMode() === 'pve')
+      setTimeout(minimaxAI.makeRandomMove, 750);
   };
 
   const checkRoundResult = (currentSymbol) => {
@@ -430,10 +440,33 @@ const gameBoard = (() => {
 
   // PUBLIC
   return {
-    changeTurn,
+    boardArray,
+    winningPatterns,
+    playerOneTurn,
     makeMove,
     getCurrentTurnSymbol,
     resetTurn,
     resetGame,
+  };
+})();
+
+// AI MINIMAX MODULE
+const minimaxAI = (() => {
+  const getRandomFreeBoxIndex = () => {
+    const freeBoxIndexes = [];
+    for (let i = 0; i < 9; i++) {
+      if (gameBoard.boardArray[i] === undefined) freeBoxIndexes.push(i);
+    }
+    const randomIndex = Math.floor(Math.random() * freeBoxIndexes.length);
+    return freeBoxIndexes[randomIndex];
+  };
+
+  const makeRandomMove = () => {
+    gameBoard.makeMove(getRandomFreeBoxIndex());
+  };
+
+  // PUBLIC
+  return {
+    makeRandomMove,
   };
 })();
