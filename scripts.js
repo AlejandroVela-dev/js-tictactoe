@@ -1,10 +1,6 @@
 'use strict';
 
-/* TO DO:
-  - 'First turn' switch (it should read currentTurn and execute gameBoard.changeTurn())
-*/
-
-/* LOW PRIORITY TO DO (Can be implemented after PvP)
+/* TO DO (Can be implemented after PvP)
   - AI Research:
     -- Minimax algorithm
     -- Optimal % of perfect move for each difficulty level
@@ -343,7 +339,8 @@ const Player = (name, symbol, difficulty) => {
 const gameBoard = (() => {
   let boardArray = [];
   let moveCount = 0;
-  let playerOneTurn = true; // Allows turn-order management
+  let playerOneStarts = true; // Allows initial turn-order every round
+  let playerOneTurn = true; // Allows turn-order inside round
   const winningPatterns = [
     [0, 3, 6],
     [1, 4, 7],
@@ -362,6 +359,7 @@ const gameBoard = (() => {
   const resetGame = () => {
     boardArray = [];
     moveCount = 0;
+    playerOneStarts = true;
     playerOneTurn = true;
     playerOne = undefined;
     playerTwo = undefined;
@@ -371,7 +369,8 @@ const gameBoard = (() => {
   const resetTurn = () => {
     boardArray = [];
     moveCount = 0;
-    playerOneTurn = true;
+    playerOneStarts = !playerOneStarts;
+    playerOneTurn = playerOneStarts;
     displayController.resetTurn();
   };
 
