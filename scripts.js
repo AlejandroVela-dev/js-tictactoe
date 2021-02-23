@@ -175,8 +175,22 @@ const displayController = (() => {
   };
 
   const createPvePlayers = () => {
+    let bestMoveChance;
+    // Assigns % of random move by Robot
+    switch (aiDifficulty) {
+      case 'easy':
+        bestMoveChance = 60;
+        break;
+      case 'mid':
+        bestMoveChance = 85;
+        break;
+      case 'hard':
+        bestMoveChance = 100;
+      default:
+        break;
+    }
     playerOne = Player('Human', 'x');
-    playerTwo = Player('Robot', 'o', aiDifficulty);
+    playerTwo = Player('Robot', 'o', bestMoveChance);
   };
 
   // METHODS - GAME BOARD
@@ -321,7 +335,6 @@ const Player = (name, symbol, difficulty) => {
   let score = 0;
   const getName = () => name;
   const getSymbol = () => symbol;
-  const setDifficulty = (x) => (difficulty = x);
   const getDifficulty = () => difficulty;
   const getScore = () => score;
   const resetScore = () => {
@@ -337,7 +350,6 @@ const Player = (name, symbol, difficulty) => {
   return {
     getName,
     getSymbol,
-    setDifficulty,
     getDifficulty,
     getScore,
     resetScore,
@@ -419,7 +431,11 @@ const gameBoard = (() => {
 
   const checkAndExecuteRobotTurn = () => {
     if (!playerOneTurn && displayController.getGameMode() === 'pve') {
-      makeMove(minimaxAI.makeBestMove());
+      const bestMoveChance = playerTwo.getDifficulty();
+      const randomMoveChance = Math.floor(Math.random() * 101); // Random number 0-100
+      bestMoveChance > randomMoveChance
+        ? makeMove(minimaxAI.getBestMove())
+        : makeMove(minimaxAI.getRandomMove());
     }
   };
 
@@ -461,17 +477,13 @@ const gameBoard = (() => {
 
 // AI MINIMAX MODULE
 const minimaxAI = (() => {
-  const getRandomFreeBoxIndex = () => {
+  const getRandomMove = () => {
     const freeBoxIndexes = [];
     for (let i = 0; i < 9; i++) {
       if (gameBoard.boardArray[i] === undefined) freeBoxIndexes.push(i);
     }
     const randomIndex = Math.floor(Math.random() * freeBoxIndexes.length);
     return freeBoxIndexes[randomIndex];
-  };
-
-  const makeRandomMove = () => {
-    gameBoard.makeMove(getRandomFreeBoxIndex());
   };
 
   const getRoundResult = (board) => {
@@ -542,7 +554,7 @@ const minimaxAI = (() => {
     }
   };
 
-  const makeBestMove = () => {
+  const getBestMove = () => {
     let board = gameBoard.boardArray;
     let bestScore = -Infinity;
     let moveScore;
@@ -563,7 +575,7 @@ const minimaxAI = (() => {
 
   // PUBLIC
   return {
-    makeBestMove,
-    makeRandomMove,
+    getBestMove,
+    getRandomMove,
   };
 })();
