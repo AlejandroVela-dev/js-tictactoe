@@ -2,7 +2,7 @@
 
 /* TO DO
   - AI Research:
-    -- Minimax algorithm
+    -- Optimizing minimax for faster evaluation
     -- Optimal % of perfect move for each difficulty level
     -- Optimal UI/UX delay response when UI making move
 
@@ -418,8 +418,9 @@ const gameBoard = (() => {
   };
 
   const checkAndExecuteRobotTurn = () => {
-    if (!playerOneTurn && displayController.getGameMode() === 'pve')
-      setTimeout(minimaxAI.makeRandomMove, 750);
+    if (!playerOneTurn && displayController.getGameMode() === 'pve') {
+      makeMove(minimaxAI.makeBestMove());
+    }
   };
 
   const checkRoundResult = (currentSymbol) => {
@@ -473,8 +474,96 @@ const minimaxAI = (() => {
     gameBoard.makeMove(getRandomFreeBoxIndex());
   };
 
+  const getRoundResult = (board) => {
+    let winner;
+    let emptyBox = 0;
+    const winningPatterns = gameBoard.winningPatterns;
+
+    const win = winningPatterns.some((winningPatern) => {
+      const xWins = winningPatern.every((index) => board[index] === 'x');
+      const oWins = winningPatern.every((index) => board[index] === 'o');
+      if (xWins) {
+        winner = 'x';
+        return true;
+      }
+      if (oWins) {
+        winner = 'o';
+        return true;
+      }
+    });
+
+    for (let i = 0; i < 9; i++) {
+      if (board[i] === undefined) emptyBox++;
+    }
+
+    const tie = emptyBox === 0;
+
+    if (win) return winner;
+    if (!win && tie) return 'tie';
+    return null;
+  };
+
+  const resultScores = {
+    o: 1,
+    tie: 0,
+    x: -1,
+  };
+
+  const getMoveScore = (board, depth, isMaximizing) => {
+    const roundResult = getRoundResult(board);
+    if (roundResult !== null) {
+      return resultScores[roundResult];
+    }
+    if (isMaximizing) {
+      let bestScore = -Infinity;
+      let moveScore;
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === undefined) {
+          board[i] = 'o';
+          moveScore = getMoveScore(board, depth + 1, false);
+          board[i] = undefined;
+          bestScore = Math.max(bestScore, moveScore);
+        }
+      }
+      return bestScore;
+    }
+    if (!isMaximizing) {
+      let bestScore = Infinity;
+      let moveScore;
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === undefined) {
+          board[i] = 'x';
+          moveScore = getMoveScore(board, depth + 1, true);
+          board[i] = undefined;
+          bestScore = Math.min(bestScore, moveScore);
+        }
+      }
+      return bestScore;
+    }
+  };
+
+  const makeBestMove = () => {
+    let board = gameBoard.boardArray;
+    let bestScore = -Infinity;
+    let moveScore;
+    let bestMove;
+    for (let i = 0; i < 9; i++) {
+      if (board[i] === undefined) {
+        board[i] = 'o';
+        moveScore = getMoveScore(board, 0, false);
+        board[i] = undefined;
+        if (moveScore > bestScore) {
+          bestScore = moveScore;
+          bestMove = i;
+        }
+      }
+    }
+    return bestMove;
+  };
+
   // PUBLIC
   return {
+    makeBestMove,
     makeRandomMove,
   };
 })();
