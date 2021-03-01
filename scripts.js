@@ -338,7 +338,7 @@ const gameBoard = (() => {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  let boardArray = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let boardArray = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // Easier access to index of 'empty' squares
   let isPlayerOneTurn = true; // Controls turns inside round
   let isPlayerOneStarting = true; // Controls initial turn each round
 
@@ -350,12 +350,12 @@ const gameBoard = (() => {
     return board.filter((square) => isSquareEmpty(square));
   };
 
-  const fillSquare = (index) => {
-    boardArray[index] = getCurrentPlayerSymbol();
-  };
-
   const getCurrentPlayerSymbol = () => {
     return isPlayerOneTurn ? 'x' : 'o';
+  };
+
+  const fillSquare = (index) => {
+    boardArray[index] = getCurrentPlayerSymbol();
   };
 
   const changeTurn = () => {
@@ -444,9 +444,8 @@ const gameBoard = (() => {
 
     emptySquares.forEach((index) => {
       boardState[index] = 'o';
-      moveScore = minimaxScore(boardState, 0, false);
+      moveScore = minimaxScore(boardState, 0, -Infinity, Infinity, false);
       boardState[index] = index; // Undo move in board after minimax
-
       if (moveScore > bestMoveScore) {
         bestMoveScore = moveScore;
         bestMoveIndex = index;
@@ -455,21 +454,25 @@ const gameBoard = (() => {
     return bestMoveIndex;
   };
 
-  const minimaxScore = (boardState, depth, isMaximizing) => {
+  const minimaxScore = (boardState, depth, alpha, beta, isMaximizing) => {
+    // Static evalution if game would be over in this state
     const roundResult = checkRound(boardState);
     if (roundResult !== null) return staticEvaluation(roundResult, depth);
 
-    let emptySquares = getEmptySquares(boardState);
+    // If it's not an ending state, continue minimax recursion
+    const emptySquares = getEmptySquares(boardState);
     let moveScore;
-
     if (isMaximizing) {
       // Maximizing turn
       let bestMoveScore = -Infinity;
       emptySquares.some((index) => {
         boardState[index] = 'o';
-        moveScore = minimaxScore(boardState, depth + 1, false);
+        moveScore = minimaxScore(boardState, depth + 1, alpha, beta, false);
         boardState[index] = index;
         bestMoveScore = Math.max(bestMoveScore, moveScore);
+        // Alpha-beta pruning
+        alpha = Math.max(alpha, bestMoveScore);
+        if (alpha >= beta) return true; // Prune this branch (stops evaluating other empty squares)
       });
       return bestMoveScore;
     } else {
@@ -477,9 +480,12 @@ const gameBoard = (() => {
       let bestMoveScore = Infinity;
       emptySquares.some((index) => {
         boardState[index] = 'x';
-        moveScore = minimaxScore(boardState, depth + 1, true);
+        moveScore = minimaxScore(boardState, depth + 1, alpha, beta, true);
         boardState[index] = index;
         bestMoveScore = Math.min(bestMoveScore, moveScore);
+        // Alpha-beta pruning
+        beta = Math.min(beta, bestMoveScore);
+        if (alpha >= beta) return true; // Prune this branch (stops evaluating other empty squares)
       });
       return bestMoveScore;
     }
