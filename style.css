@@ -10,7 +10,7 @@
   --enemy: hsl(0, 100%, 100%);
   --easy: hsl(104, 100%, 53%);
   --mid: hsl(29, 100%, 58%);
-  --hard: hsl(0, 62%, 37%);
+  --hard: hsl(0, 100%, 40%);
 }
 
 /* FONT IMPORTS */
@@ -105,8 +105,8 @@ footer,
 .card,
 .img-holder,
 .prematch-player,
-.board__box,
-.match-result,
+.board__square,
+.round-result,
 .result--controls,
 .controls__back,
 .controls__next-round,
@@ -248,7 +248,8 @@ main {
   gap: 0px;
 }
 
-.diff-ai {
+.difficulty,
+.player-info__difficulty {
   border: 4px solid var(--dark);
   border-radius: 1rem;
   cursor: pointer;
@@ -338,29 +339,29 @@ main {
   width: 70%;
 }
 
-.board__box {
+.board__square {
   box-shadow: 0 0 0 4px var(--dark);
   width: 100%;
   height: 100%;
 }
 
-.box-0 {
+.square-0 {
   border-top-left-radius: 2rem;
 }
 
-.box-2 {
+.square-2 {
   border-top-right-radius: 2rem;
 }
 
-.box-6 {
+.square-6 {
   border-bottom-left-radius: 2rem;
 }
 
-.box-8 {
+.square-8 {
   border-bottom-right-radius: 2rem;
 }
 
-.match-result {
+.round-result {
   display: none;
   position: absolute;
   flex-direction: column;
@@ -457,6 +458,7 @@ main {
 
   .player-info .player-symbol {
     width: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .score-desktop__points {
@@ -464,12 +466,7 @@ main {
     font-size: 2rem;
   }
 
-  .player-info__name-1,
-  .player-info__name-2 {
-    margin-top: 1rem;
-  }
-
-  .player-info__diff-ai {
+  .player-info__diff-difficulty {
     display: none;
   }
 

@@ -15,7 +15,7 @@
         <div class="game game--menu">
           <div
             class="pvp-mode card animate-bob navigation"
-            data-destination="game--pvp"
+            data-target="game--pvp"
           >
             <div class="img-holder">
               <img src="svg/player.svg" alt="Player 1" />
@@ -30,7 +30,7 @@
 
           <div
             class="pve-mode card animate-bob navigation"
-            data-destination="game--pve"
+            data-target="game--pve"
           >
             <div class="img-holder">
               <img src="svg/player.svg" alt="Player 1" />
@@ -83,7 +83,7 @@
 
               <div
                 class="pvp-fight-btn btn-fight navigation"
-                data-destination="game--board"
+                data-target="game--board"
               >
                 Fight!
               </div>
@@ -92,7 +92,7 @@
 
           <div
             class="controls__back animate-scale navigation"
-            data-destination="game--menu"
+            data-target="game--menu"
           >
             <div class="img-holder">
               <img src="svg/arrow-back.svg" alt="Back to menu" />
@@ -125,18 +125,29 @@
               </div>
 
               <div class="difficulty-selector text-stroke">
-                <div class="diff-ai easy animate-bob animate-grayscale">
-                  easy
+                <div
+                  class="difficulty easy animate-bob animate-grayscale"
+                  data-difficulty="easy"
+                >
+                  <span>easy</span>
                 </div>
-                <div class="diff-ai mid animate-bob animate-grayscale">mid</div>
-                <div class="diff-ai hard animate-bob animate-grayscale">
-                  hard
+                <div
+                  class="difficulty mid animate-bob animate-grayscale"
+                  data-difficulty="mid"
+                >
+                  <span>mid</span>
+                </div>
+                <div
+                  class="difficulty hard animate-bob animate-grayscale"
+                  data-difficulty="hard"
+                >
+                  <span>hard</span>
                 </div>
               </div>
 
               <div
                 class="pve-fight-btn btn-fight navigation"
-                data-destination="game--board"
+                data-target="game--board"
               >
                 Fight!
               </div>
@@ -145,7 +156,7 @@
 
           <div
             class="controls__back animate-scale navigation"
-            data-destination="game--menu"
+            data-target="game--menu"
           >
             <div class="img-holder">
               <img src="svg/arrow-back.svg" alt="Back to menu" />
@@ -159,7 +170,7 @@
             <div class="img-holder">
               <img src="svg/player.svg" alt="Player 1" />
             </div>
-            <span class="score-p1__points text-stroke">0</span>
+            <span class="score-p1__points text-stroke"></span>
           </div>
 
           <div class="card card-p2 score score-p2 player-card">
@@ -170,7 +181,7 @@
                 class="enemy-picture"
               />
             </div>
-            <span class="score-p2__points text-stroke">0</span>
+            <span class="score-p2__points text-stroke"></span>
           </div>
 
           <div class="score-desktop score-p1">
@@ -181,43 +192,43 @@
               <div class="img-holder player-symbol">
                 <img src="svg/cross.svg" alt="Cross" />
               </div>
-              <span class="player-info__name-1 text-stroke">Human</span>
+              <span class="player-info__name-1 text-stroke"></span>
             </div>
 
             <div class="score-desktop__points text-stroke">
-              Wins: <span class="score-p1__points">0</span>
+              <span>Wins: </span><span class="score-p1__points"></span>
             </div>
           </div>
 
           <div class="card board result--overlay">
-            <div class="board__box box-0" data-index="0">
+            <div class="board__square square-0" data-index="0">
               <img src="" />
             </div>
-            <div class="board__box box-1" data-index="1">
+            <div class="board__square square-1" data-index="1">
               <img src="" />
             </div>
-            <div class="board__box box-2" data-index="2">
+            <div class="board__square square-2" data-index="2">
               <img src="" />
             </div>
-            <div class="board__box box-3" data-index="3">
+            <div class="board__square square-3" data-index="3">
               <img />
             </div>
-            <div class="board__box box-4" data-index="4">
+            <div class="board__square square-4" data-index="4">
               <img src="" />
             </div>
-            <div class="board__box box-5" data-index="5">
+            <div class="board__square square-5" data-index="5">
               <img />
             </div>
-            <div class="board__box box-6" data-index="6">
+            <div class="board__square square-6" data-index="6">
               <img src="" />
             </div>
-            <div class="board__box box-7" data-index="7">
+            <div class="board__square square-7" data-index="7">
               <img />
             </div>
-            <div class="board__box box-8" data-index="8">
+            <div class="board__square square-8" data-index="8">
               <img src="" />
             </div>
-            <div class="match-result text-stroke">
+            <div class="round-result text-stroke">
               <span class="result--winner"></span>
               <span class="result--text"></span>
             </div>
@@ -240,18 +251,18 @@
                 />
               </div>
               <span class="player-info__name-2 text-stroke"></span>
-              <div class="diff-ai player-info__diff-ai text-stroke"></div>
+              <div class="player-info__difficulty text-stroke"></div>
             </div>
 
             <div class="score-desktop__points text-stroke">
-              Wins: <span class="score-p2__points">0</span>
+              <span>Wins: </span><span class="score-p2__points"></span>
             </div>
           </div>
 
           <div class="result--controls">
             <div
               class="controls__back animate-scale text-stroke navigation"
-              data-destination="game--menu"
+              data-target="game--menu"
             >
               <div class="img-holder">
                 <img src="svg/arrow-back.svg" alt="Back to menu" />
