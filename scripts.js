@@ -2,7 +2,6 @@
 
 /* TO DO
 - Minimax:
-  -- Depth uses for optimal scoring system
   -- ALpha-beta pruning optimization
 
 - Add transition for resultScreen (so user can see the final state of gameBoard)
@@ -458,7 +457,7 @@ const gameBoard = (() => {
 
   const minimaxScore = (boardState, depth, isMaximizing) => {
     const roundResult = checkRound(boardState);
-    if (roundResult !== null) return staticEvaluation(roundResult);
+    if (roundResult !== null) return staticEvaluation(roundResult, depth);
 
     let emptySquares = getEmptySquares(boardState);
     let moveScore;
@@ -486,10 +485,10 @@ const gameBoard = (() => {
     }
   };
 
-  const staticEvaluation = (roundResult) => {
+  const staticEvaluation = (roundResult, depth) => {
     switch (roundResult) {
       case 'o':
-        return 100;
+        return 100 - depth;
       case 'x':
         return -100;
       case 'tie':
