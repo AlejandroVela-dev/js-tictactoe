@@ -34,6 +34,20 @@
     -0.12em -0.12em 0.08em var(--dark), 0.12em -0.12em 0.08em var(--dark);
 }
 
+.animate-fadein {
+  animation: 1s ease-in-out fadein;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .animate-bob:hover,
 .animate-bob-turn,
 .animate-bob-auto:placeholder-shown {

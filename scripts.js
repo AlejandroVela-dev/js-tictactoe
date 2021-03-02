@@ -1,11 +1,6 @@
 'use strict';
 
 /* TO DO
-- Minimax:
-  -- ALpha-beta pruning optimization
-
-- Add transition for resultScreen (so user can see the final state of gameBoard)
-
 - Fix LuckyGuy font:
   -- Replace font (check with USB Firefox Debug):
     --- If renders properly: re-adjust logo and shadows
