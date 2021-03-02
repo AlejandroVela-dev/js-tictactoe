@@ -15,8 +15,11 @@
 
 /* FONT IMPORTS */
 @font-face {
-  font-family: 'LuckiestGuy';
-  src: url('fonts/LuckiestGuy.ttf');
+  font-family: 'GrilledCheese BTN Regular';
+  font-weight: normal;
+  font-style: normal;
+  src: local('GrilledCheese BTN Regular'),
+    url('fonts/GrilledCheeseBTNRegular.woff') format('woff');
 }
 
 /* RESET */
@@ -28,22 +31,25 @@
 
 /* UTILITY CLASSES */
 .text-stroke {
-  text-shadow: -0.12em 0 0.08em var(--dark), 0.12em 0 0.08em var(--dark),
-    0 0.12em 0.08em var(--dark), 0 -0.12em 0.08em var(--dark),
-    -0.12em 0.12em 0.08em var(--dark), 0.12em 0.12em 0.08em var(--dark),
-    -0.12em -0.12em 0.08em var(--dark), 0.12em -0.12em 0.08em var(--dark);
+  text-shadow: -0.1em 0 0.06em var(--dark), 0.1em 0 0.06em var(--dark),
+    0 0.1em 0.06em var(--dark), 0 -0.1em 0.06em var(--dark),
+    -0.1em 0.1em 0.06em var(--dark), 0.1em 0.1em 0.06em var(--dark),
+    -0.1em -0.1em 0.06em var(--dark), 0.1em -0.1em 0.06em var(--dark);
 }
 
 .animate-fadein {
-  animation: 1s ease-in-out fadein;
+  opacity: 1;
+  animation: 0.2s ease-in-out fadein;
 }
 
 @keyframes fadein {
   0% {
+    visibility: hidden;
     opacity: 0;
   }
 
   100% {
+    visibility: visible;
     opacity: 1;
   }
 }
@@ -52,15 +58,6 @@
 .animate-bob-turn,
 .animate-bob-auto:placeholder-shown {
   animation: 0.75s ease-in-out infinite bob;
-}
-
-.animate-grayscale {
-  transition: 0.25s ease-in-out filter;
-  filter: grayscale(90%);
-}
-
-.animate-grayscale:hover {
-  filter: none;
 }
 
 @keyframes bob {
@@ -96,17 +93,23 @@
   }
 }
 
-/* GENERAL STYLES */
-html {
-  color: var(--dark);
-  font-family: 'LuckiestGuy';
+.animate-grayscale {
+  transition: 0.25s ease-in-out filter;
+  filter: grayscale(90%);
 }
 
+.animate-grayscale:hover {
+  filter: none;
+}
+
+/* GENERAL STYLES */
 body {
   background-image: url(svg/symbols-bg.svg),
     linear-gradient(90deg, #f9cbd3 0%, #c6a8fd 100%);
   background-repeat: no-repeat;
   background-size: cover;
+  color: var(--dark);
+  font-family: 'GrilledCheese BTN Regular';
 }
 
 img {
@@ -186,7 +189,7 @@ main {
 .game--menu {
   display: grid;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: 2.4rem;
 }
 
 .game--menu .img-holder {
@@ -200,7 +203,7 @@ main {
 /* SCREEN 2: PVP-PVE */
 .game--pvp,
 .game--pve {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 .prematch-info {
@@ -230,8 +233,9 @@ main {
   border: none;
   width: 120%;
   text-align: center;
-  font-family: 'LuckiestGuy';
-  font-size: 1.5rem;
+  line-height: calc(100% + 1em);
+  font-family: 'GrilledCheese BTN Regular';
+  font-size: 1.8rem;
 }
 
 .prematch-player input[name='Player 1'] {
@@ -269,6 +273,7 @@ main {
   cursor: pointer;
   padding: 0.5rem 0.8rem;
   text-align: center;
+  text-transform: uppercase;
   color: var(--light);
   font-size: 1rem;
 }
@@ -294,7 +299,7 @@ main {
   padding: 0.3rem 0;
   width: 100%;
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.4rem;
 }
 
 /* SCREEN 3: BOARD GAME */
@@ -308,9 +313,9 @@ main {
 
 .score {
   justify-self: center;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   min-width: 120px;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   gap: 1rem;
 }
 
@@ -385,7 +390,7 @@ main {
   width: 100%;
   height: 100%;
   color: var(--light);
-  font-size: 3.5rem;
+  font-size: 3.2rem;
 }
 
 .result--winner {
@@ -398,8 +403,9 @@ main {
   justify-content: space-around;
   width: 100%;
   height: 4.4rem;
+  letter-spacing: 0px;
   color: var(--yellow);
-  font-size: 1.3rem;
+  font-size: 1.6rem;
 }
 
 .controls__back,
@@ -409,14 +415,14 @@ main {
   cursor: pointer;
 }
 
-.controls__next-round {
-  display: none;
-  line-height: 2.2rem;
-  font-size: 2.2rem;
-}
-
+.controls__next-round,
 .controls__reset-score {
   display: none;
+}
+
+.controls__next-round {
+  line-height: calc(100% - 0.1em);
+  font-size: 2.4rem;
 }
 
 /* Medium devices (tablets, 640px and up) */
@@ -424,6 +430,10 @@ main {
   .board {
     width: 25rem;
     height: 25rem;
+  }
+
+  .round-result {
+    font-size: 4.2rem;
   }
 }
 
@@ -462,22 +472,22 @@ main {
     flex-direction: column;
     padding: 1rem;
     min-width: 125px;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
   .player-info .img-holder {
     margin-bottom: 0.5rem;
-    width: 3rem;
+    width: 3.5rem;
   }
 
   .player-info .player-symbol {
-    width: 2rem;
     margin-bottom: 1.5rem;
+    width: 2.5rem;
   }
 
   .score-desktop__points {
     text-align: center;
-    font-size: 2rem;
+    font-size: 2.4rem;
   }
 
   .player-info__diff-difficulty {
