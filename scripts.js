@@ -128,15 +128,6 @@ const displayController = (() => {
   );
 
   // METHODS - PLAYERS CREATION
-  const getPlayerNameInputs = () => {
-    const PlayerOneName = playerOneInput.value
-      ? playerOneInput.value
-      : 'Player 1';
-    const PlayerTwoName = playerTwoInput.value
-      ? playerTwoInput.value
-      : 'Player 2';
-    return [PlayerOneName, PlayerTwoName];
-  };
 
   const getDifficultyFactor = () => {
     // Probability of Robot making the optimal move in its turn
@@ -155,8 +146,8 @@ const displayController = (() => {
   const createPlayers = () => {
     switch (gameMode) {
       case 'pvp':
-        playerOne = Player(getPlayerNameInputs()[0]);
-        playerTwo = Player(getPlayerNameInputs()[1]);
+        playerOne = Player(playerTwoInput.value || 'Player 1');
+        playerTwo = Player(playerTwoInput.value || 'Player 2');
         break;
 
       case 'pve':
