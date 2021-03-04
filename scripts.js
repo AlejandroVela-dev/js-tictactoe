@@ -1,10 +1,6 @@
 'use strict';
 
 /* TO DO
-- Fix LuckyGuy font:
-  -- Replace font (check with USB Firefox Debug):
-    --- If renders properly: re-adjust logo and shadows
-
 - Update README (GIFs and mention to minimax)
 */
 

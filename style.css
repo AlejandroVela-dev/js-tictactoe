@@ -15,11 +15,11 @@
 
 /* FONT IMPORTS */
 @font-face {
-  font-family: 'GrilledCheese BTN Regular';
+  font-family: 'GrilledCheese BTN';
   font-weight: normal;
   font-style: normal;
-  src: local('GrilledCheese BTN Regular'),
-    url('fonts/GrilledCheeseBTNRegular.woff') format('woff');
+  src: local('GrilledCheese BTN'),
+    url('fonts/GrilledCheese BTN.woff') format('woff');
 }
 
 /* RESET */
@@ -109,7 +109,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   color: var(--dark);
-  font-family: 'GrilledCheese BTN Regular';
+  font-family: 'GrilledCheese BTN';
 }
 
 img {
@@ -234,7 +234,7 @@ main {
   width: 120%;
   text-align: center;
   line-height: calc(100% + 1em);
-  font-family: 'GrilledCheese BTN Regular';
+  font-family: 'GrilledCheese BTN';
   font-size: 1.8rem;
 }
 
