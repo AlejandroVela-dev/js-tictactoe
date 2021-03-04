@@ -1,9 +1,5 @@
 'use strict';
 
-/* TO DO
-- Update README (GIFs and mention to minimax)
-*/
-
 let playerOne;
 let playerTwo;
 
@@ -283,7 +279,6 @@ const displayController = (() => {
     animatePlayerCard,
     fillSquare,
     getGameMode,
-    refreshScores,
     resetTurn,
     processResult,
   };
@@ -349,18 +344,17 @@ const gameBoard = (() => {
   };
 
   const makeMove = (index) => {
-    if (isSquareEmpty(boardArray[index])) {
-      fillSquare(index);
-      displayController.fillSquare(index, isPlayerOneTurn);
-      let roundResult = checkRound(boardArray);
-      if (roundResult) {
-        processResult(roundResult);
-      } else {
-        // No win or tie (roundResult === null)
-        changeTurn();
-        displayController.animatePlayerCard(getCurrentPlayerSymbol());
-        if (isRobotTurn()) makeRobotMove();
-      }
+    if (!isSquareEmpty(boardArray[index])) return null;
+    fillSquare(index);
+    displayController.fillSquare(index, isPlayerOneTurn);
+    let roundResult = checkRound(boardArray);
+    if (roundResult) {
+      processResult(roundResult);
+    } else {
+      // No win or tie (roundResult === null)
+      changeTurn();
+      displayController.animatePlayerCard(getCurrentPlayerSymbol());
+      if (isRobotTurn()) makeRobotMove();
     }
   };
 
@@ -489,15 +483,15 @@ const gameBoard = (() => {
     isPlayerOneStarting = !isPlayerOneStarting;
     isPlayerOneTurn = isPlayerOneStarting;
     displayController.resetTurn();
-    if (isRobotTurn()) makeRobotMove(); // Allows
+    if (isRobotTurn()) makeRobotMove(); // Allows Robot making first move in its turn
   };
 
   const resetGame = () => {
     boardArray = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     isPlayerOneStarting = true;
     isPlayerOneTurn = true;
-    playerOne = undefined;
-    playerTwo = undefined;
+    playerOne = null;
+    playerTwo = null;
   };
 
   // PUBLIC
