@@ -407,7 +407,7 @@ const gameBoard = (() => {
 
   const getRandomMove = () => {
     const emptySquares = getEmptySquares(boardArray);
-    const randomIndex = Math.floor(Math.random() * (emptySquares.length + 1));
+    const randomIndex = Math.floor(Math.random() * emptySquares.length);
     return emptySquares[randomIndex];
   };
 
