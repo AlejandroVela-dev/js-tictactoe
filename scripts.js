@@ -142,7 +142,7 @@ const displayController = (() => {
   const createPlayers = () => {
     switch (gameMode) {
       case 'pvp':
-        playerOne = Player(playerTwoInput.value || 'Player 1');
+        playerOne = Player(playerOneInput.value || 'Player 1');
         playerTwo = Player(playerTwoInput.value || 'Player 2');
         break;
 
